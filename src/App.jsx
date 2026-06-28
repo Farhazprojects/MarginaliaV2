@@ -446,7 +446,7 @@ export default function App() {
     setLoadingTask("Running critical appraisal");
     setError(null);
     try {
-      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nAs an experienced supervisor, critically appraise each paper. For each, identify real methodological or argumentative weaknesses that are visible from the text itself: e.g. small or unrepresentative sample, missing baseline comparisons, conclusions broader than the data supports, unclear methodology, lack of statistical detail, potential bias, or weak validation. Do not invent generic criticisms — every point must tie to something actually stated or actually missing in that paper's text. If a paper is methodologically solid, say so plainly rather than forcing a criticism.\n\nRespond with ONLY a JSON array, no prose, no fences. Each item: {"paperId":"P1","strengths":["short strength point", ...],"weaknesses":["short weakness point", ...],"refs":[{"paperId":"P1","section":"p4"}]}`;
+      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nAs an experienced supervisor, critically appraise each paper. For each, identify real methodological or argumentative weaknesses that are visible from the text itself: e.g. small or unrepresentative sample, missing baseline comparisons, conclusions broader than the data supports, unclear methodology, lack of statistical detail, potential bias, or weak validation. Do not invent generic criticisms — every point must tie to something actually stated or actually missing in that paper's text. If a paper is methodologically solid, say so plainly rather than forcing a criticism.\n\nRespond with ONLY a JSON array, no prose, no fences. Keep each field concise -a few sentences at most - so the response fits well within the token limit. Each item: {"paperId":"P1","strengths":["short strength point", ...],"weaknesses":["short weakness point", ...],"refs":[{"paperId":"P1","section":"p4"}]}`;
       const out = await callClaude(prompt);
       const parsed = JSON.parse(stripFences(out));
       setComponents((c) => ({ ...c, appraisal: parsed }));
@@ -462,7 +462,7 @@ export default function App() {
     setLoadingTask("Suggesting research topics");
     setError(null);
     try {
-      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nAct as a research supervisor advising a student on what to work on next, based only on this corpus. Suggest concrete, specific research topics or thesis directions that a student could realistically pursue, each one clearly justified by a gap, limitation, or under-explored angle that genuinely exists in this corpus — not generic topics in the general field. For each, note roughly how feasible it looks given what these papers show (e.g. data availability, method maturity) and what makes it a worthwhile angle rather than a repeat of existing work.\n\nRespond with ONLY a JSON array, no prose, no fences. Each item: {"topic":"specific proposed topic/title","justification":"why this is a real opening, grounded in the corpus","feasibilityNote":"short note on feasibility/practicality based on what the corpus shows","refs":[{"paperId":"P1","section":"p6"}]}`;
+      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nAct as a research supervisor advising a student on what to work on next, based only on this corpus. Suggest concrete, specific research topics or thesis directions that a student could realistically pursue, each one clearly justified by a gap, limitation, or under-explored angle that genuinely exists in this corpus — not generic topics in the general field. For each, note roughly how feasible it looks given what these papers show (e.g. data availability, method maturity) and what makes it a worthwhile angle rather than a repeat of existing work.\n\nRespond with ONLY a JSON array, no prose, no fences. Keep each field concise -a few sentences at most - so the response fits well within the token limit. Each item: {"topic":"specific proposed topic/title","justification":"why this is a real opening, grounded in the corpus","feasibilityNote":"short note on feasibility/practicality based on what the corpus shows","refs":[{"paperId":"P1","section":"p6"}]}`;
       const out = await callClaude(prompt);
       const parsed = JSON.parse(stripFences(out));
       setComponents((c) => ({ ...c, topics: parsed }));
@@ -478,7 +478,7 @@ export default function App() {
     setLoadingTask("Identifying research gaps");
     setError(null);
     try {
-      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nIdentify research gaps that are EITHER (a) explicitly stated as limitations/future work by the papers' authors, OR (b) clearly visible by comparing what different papers do and do not cover against each other. Do not invent gaps unsupported by the text.\n\nRespond with ONLY a JSON array, no prose, no fences. Each item: {"gap": "short gap statement", "explanation": "1-2 sentence grounded explanation", "type": "stated"|"comparative", "refs": [{"paperId":"P1","section":"p4"}]}`;
+      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nIdentify research gaps that are EITHER (a) explicitly stated as limitations/future work by the papers' authors, OR (b) clearly visible by comparing what different papers do and do not cover against each other. Do not invent gaps unsupported by the text.\n\nRespond with ONLY a JSON array, no prose, no fences. Keep each field concise -a few sentences at most - so the response fits well within the token limit. Each item: {"gap": "short gap statement", "explanation": "1-2 sentence grounded explanation", "type": "stated"|"comparative", "refs": [{"paperId":"P1","section":"p4"}]}`;
       const out = await callClaude(prompt);
       const parsed = JSON.parse(stripFences(out));
       setComponents((c) => ({ ...c, gaps: parsed }));
@@ -494,7 +494,7 @@ export default function App() {
     setLoadingTask("Building literature matrix");
     setError(null);
     try {
-      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nBuild a literature matrix, one row per paper, comparing them on: author/year if stated, objective, method, dataset/sample, key findings, limitations. Use "Not stated" if the paper text does not specify a field — never invent it.\n\nRespond with ONLY a JSON array, no prose, no fences. Each item: {"paperId":"P1","title":"...","authorYear":"...","objective":"...","method":"...","dataset":"...","findings":"...","limitations":"..."}`;
+      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nBuild a literature matrix, one row per paper, comparing them on: author/year if stated, objective, method, dataset/sample, key findings, limitations. Use "Not stated" if the paper text does not specify a field — never invent it.\n\nRespond with ONLY a JSON array, no prose, no fences. Keep each field concise -a few sentences at most - so the response fits well within the token limit. Each item: {"paperId":"P1","title":"...","authorYear":"...","objective":"...","method":"...","dataset":"...","findings":"...","limitations":"..."}`;
       const out = await callClaude(prompt);
       const parsed = JSON.parse(stripFences(out));
       setComponents((c) => ({ ...c, matrix: parsed }));
@@ -510,7 +510,7 @@ export default function App() {
     setLoadingTask("Clustering themes");
     setError(null);
     try {
-      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nIdentify the major recurring themes across this set of papers based only on their content. Group papers under each theme.\n\nRespond with ONLY a JSON array, no prose, no fences. Each item: {"theme":"short theme name","description":"1-2 sentence grounded description of how this theme appears across papers","papers":[{"paperId":"P1","section":"p2"}]}`;
+      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nIdentify the major recurring themes across this set of papers based only on their content. Group papers under each theme.\n\nRespond with ONLY a JSON array, no prose, no fences. Keep each field concise -a few sentences at most - so the response fits well within the token limit. Each item: {"theme":"short theme name","description":"1-2 sentence grounded description of how this theme appears across papers","papers":[{"paperId":"P1","section":"p2"}]}`;
       const out = await callClaude(prompt);
       const parsed = JSON.parse(stripFences(out));
       setComponents((c) => ({ ...c, themes: parsed }));
@@ -526,7 +526,7 @@ export default function App() {
     setLoadingTask("Proposing future work");
     setError(null);
     try {
-      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nPropose future research directions. Base every proposal directly on gaps, limitations, or explicit future-work statements found in the papers — do not introduce directions unconnected to the supplied text.\n\nRespond with ONLY a JSON array, no prose, no fences. Each item: {"direction":"short proposal","rationale":"1-2 sentence grounded rationale tied to specific paper content","refs":[{"paperId":"P1","section":"p6"}]}`;
+      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nPropose future research directions. Base every proposal directly on gaps, limitations, or explicit future-work statements found in the papers — do not introduce directions unconnected to the supplied text.\n\nRespond with ONLY a JSON array, no prose, no fences. Keep each field concise -a few sentences at most - so the response fits well within the token limit. Each item: {"direction":"short proposal","rationale":"1-2 sentence grounded rationale tied to specific paper content","refs":[{"paperId":"P1","section":"p6"}]}`;
       const out = await callClaude(prompt);
       const parsed = JSON.parse(stripFences(out));
       setComponents((c) => ({ ...c, future: parsed }));
@@ -556,7 +556,7 @@ export default function App() {
     setChatMessages((m) => [...m, { role: "user", text: q }]);
     setLoadingTask("Answering");
     try {
-      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nQuestion: ${q}\n\nAnswer using only the corpus above. If the answer is not contained in the corpus, say plainly that the uploaded papers do not cover this. Cite [[PAPERID:pXX]] inline after each claim.`;
+      const prompt = `${GROUNDING_RULE}\n\nCorpus:\n\n${buildCorpusBlock(ready)}\n\nQuestion: ${q}\n\nAnswer like a knowledgeable research assistant talking to the person who uploaded these papers — direct, conversational, and precise, not like a formal report. Follow these rules:\n- Answer using only the corpus above. Never fill gaps with outside knowledge of the topic.\n- If multiple papers are relevant, synthesise across them rather than listing them one by one.\n- If the papers disagree or report different results, say so explicitly rather than picking one.\n- If the answer is only partially covered, say what is covered and clearly flag what isn't.\n- If the corpus does not address the question at all, say so plainly in one sentence rather than guessing or padding.\n- Keep the answer as short as it can be while still being complete — a few sentences for a simple question, a short paragraph or two for a complex one. Avoid restating the question back.\n- Cite [[PAPERID:pXX]] inline immediately after each specific claim, especially numbers, findings, and direct comparisons.`;
       const out = await callClaude(prompt);
       setChatMessages((m) => [...m, { role: "assistant", text: out.trim() }]);
     } catch (e) {
