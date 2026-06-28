@@ -11,7 +11,7 @@ It also includes a live paper-discovery search (via Crossref) so you can search 
 
 ## Why this exists
 
-Most AI summarisation tools blend in outside knowledge when they answer, which makes them unreliable for academic work — you can't tell what came from your paper and what the model already "knew" about the topic. Marginalia is built around one rule: **the model is only allowed to use the text you uploaded.** If something isn't in your papers, it says so instead of guessing.
+Most AI summarisation tools blend in outside knowledge when they answer, which makes them unreliable for academic work. You can't tell what came from your paper and what the model already "knew" about the topic. Marginalia is built around one rule: **the model is only allowed to use the text you uploaded.** If something isn't in your papers, it says so instead of guessing.
 
 ## Features
 
@@ -114,93 +114,7 @@ vercel dev
 
 ---
 
-## Publishing to GitHub
 
-If this is your first time pushing this project to GitHub:
-
-```bash
-cd marginalia
-git init
-git add .
-git commit -m "Initial commit: Marginalia research desk"
-```
-
-Create a new, empty repository on GitHub (do **not** initialise it with a README — you already have one):
-
-1. Go to [github.com/new](https://github.com/new)
-2. Name it (e.g. `marginalia`), leave it empty, click **Create repository**
-3. GitHub will show you a remote URL — copy it, then run:
-
-```bash
-git remote add origin https://github.com/<your-username>/marginalia.git
-git branch -M main
-git push -u origin main
-```
-
-Your code is now on GitHub. Because `.env` is git-ignored, your API key is **not** included — anyone cloning the repo will need to supply their own key.
-
----
-
-## Deploying live (Vercel)
-
-1. Go to [vercel.com/new](https://vercel.com/new) and sign in with GitHub
-2. Import the `marginalia` repository
-3. Vercel will auto-detect the Vite framework — leave build settings as default
-4. Before deploying, add your environment variable:
-   - **Settings → Environment Variables**
-   - Key: `GEMINI_API_KEY`
-   - Value: your real key
-   - Apply to: Production, Preview, and Development
-5. Click **Deploy**
-
-After the first deploy, every future `git push` to `main` redeploys automatically.
-
-### Deploying to GitHub Pages instead?
-
-GitHub Pages only serves static files — it cannot run the `api/claude.js` serverless function, so the AI features (summaries, gaps, ask, etc.) will not work on a plain GitHub Pages deployment. Crossref-based paper discovery would still work, since that's a direct browser call. **Vercel (or a similar platform with serverless functions, like Netlify) is recommended** for the full app.
-
----
-
-## Running it as a Mac app
-
-Prefer a real double-clickable application instead of a website? Marginalia can be packaged into a native `Marginalia.app` for macOS, with its own Dock icon, that runs entirely locally and stores your API key on your machine instead of in the cloud.
-
-See **[docs/MAC_APP.md](docs/MAC_APP.md)** for the full walkthrough. Short version:
-
-```bash
-npm install
-npm run desktop:build
-```
-
-Then open the `.dmg` produced in `release/` and drag Marginalia into Applications.
-
----
-
-## Project structure
-
-```
-marginalia/
-├── api/
-│   └── claude.js          # Vercel serverless function — holds the API key for the web deployment
-├── electron/
-│   └── main.cjs            # Electron main process — creates the Mac app window
-├── server/
-│   └── local-server.js     # Local server used by the Mac app (same job as api/claude.js, runs offline)
-├── src/
-│   ├── App.jsx              # The entire application UI and logic
-│   └── main.jsx             # React entry point
-├── public/                  # Static assets (currently empty — add a favicon etc. here)
-├── docs/
-│   ├── PROMPTING.md          # How the grounding/system prompts are structured
-│   └── MAC_APP.md            # How to build and run the native Mac app
-├── index.html
-├── package.json
-├── vite.config.js
-├── vercel.json
-├── .env.example
-├── .gitignore
-└── LICENSE
-```
 
 ## Tech stack
 
